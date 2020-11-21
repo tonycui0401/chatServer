@@ -211,6 +211,18 @@ client.on('createMessage', (message) => {
         continue;
       }
 
+
+      fetch(auth_endpoint+'/sendIosNotification?id='+json[i].member
+      , {
+        method: 'get',
+        headers: { 'Content-Type': 'application/json' },
+    })
+    .then(res => res.json())
+    .then(json => console.log(json));
+
+
+
+
       fetch(local_endpoint+'/createChatGroupMsgStatus'
       , {
         method: 'post',
