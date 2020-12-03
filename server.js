@@ -336,7 +336,7 @@ client.on('createMessage', (message) => {
   
     fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type
     , {
-      method: 'get',
+      method: 'put',
       headers: { 'Content-Type': 'application/json' },
   })
   .then(res => res.json())
