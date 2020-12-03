@@ -329,7 +329,21 @@ client.on('createMessage', (message) => {
       headers: { 'Content-Type': 'application/json' },
   })
   .then(res => res.json())
+  .then(json => {
+    
+    
+    // console.log(json)
+  
+    fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+message.message+'&time='+message.time+'&type='+message.type
+    , {
+      method: 'get',
+      headers: { 'Content-Type': 'application/json' },
+  })
+  .then(res => res.json())
   .then(json => console.log(json));
+  
+  
+  });
     
 
 
