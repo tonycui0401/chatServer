@@ -334,7 +334,7 @@ client.on('createMessage', (message) => {
     
     // console.log(json)
   
-    fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+message.message+'&time='+message.time+'&type='+message.type
+    fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type
     , {
       method: 'get',
       headers: { 'Content-Type': 'application/json' },
