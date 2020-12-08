@@ -332,7 +332,7 @@ client.on('createMessage', (message) => {
   .then(json => {
     
     
-    // console.log(json)
+    console.log(json)
   
     fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type
     , {
