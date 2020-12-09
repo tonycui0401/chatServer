@@ -199,6 +199,13 @@ client.on('createMessage', (message) => {
   
   console.log(mjson)
 
+  fetch(local_endpoint+'/updateGroupLastChannel?group_id='+message.room+'&sender='+message.user_id+'&message='+message.text+'&time='+moment().valueOf()+'&type='+message.type+'&message_id='+mjson.id
+  , {
+    method: 'put',
+    headers: { 'Content-Type': 'application/json' },
+})
+.then(res => res.json())
+.then(json => console.log(json));
 
 
   fetch(local_endpoint+'/allChatGroupMembers?room='+message.room)
@@ -332,7 +339,7 @@ client.on('createMessage', (message) => {
   .then(json => {
     
     
-    console.log(json)
+    // console.log(json)
   
     fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type
     , {
