@@ -209,7 +209,8 @@ client.on('createMessage', (message) => {
       seenat:'seen'
     }),
     headers: { 'Content-Type': 'application/json' },
-})
+}).then(res => res.json())
+.then(json => console.log(json));
 
 console.log("end test seen user id")
 
@@ -227,8 +228,7 @@ console.log("end test seen user id")
 .then(json => {
 
 
-.then(res => res.json())
-.then(json => console.log(json));
+
   
     for (let i in json){
 
