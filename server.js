@@ -196,8 +196,9 @@ client.on('createMessage', (message) => {
 .then(res => res.json())
 .then(mjson => {
   
-  
-  console.log(mjson)
+  console.log("test group id")
+  console.log(mjson.id)
+  console.log("end test group id")
 
   fetch(local_endpoint+'/updateGroupLastChannel?group_id='+message.room+'&sender='+message.user_id+'&message='+message.text+'&time='+moment().valueOf()+'&type='+message.type+'&message_id='+mjson.id
   , {
