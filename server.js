@@ -216,6 +216,18 @@ client.on('createMessage', (message) => {
     for (let i in json){
 
       if (json[i].member === message.user_id) {
+        fetch(local_endpoint+'/createChatGroupMsgStatus'
+        , {
+          method: 'post',
+          body:    JSON.stringify({
+            msg_id:mjson.id,
+            seenby:message.user_id,
+            seenat:'seen'
+          }),
+          headers: { 'Content-Type': 'application/json' },
+      })
+      .then(res => res.json())
+      .then(json => console.log(json));
         continue;
       }
 
@@ -228,7 +240,7 @@ client.on('createMessage', (message) => {
     .then(res => res.json())
     .then(json => console.log(json));
 
-
+  }
 
 
       fetch(local_endpoint+'/createChatGroupMsgStatus'
