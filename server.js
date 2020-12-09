@@ -200,17 +200,17 @@ client.on('createMessage', (message) => {
   console.log(mjson.id)
   console.log("end test group id")
 
-  fetch(local_endpoint+'/createChatGroupMsgStatus'
-  , {
-    method: 'post',
-    body:    JSON.stringify({
-      msg_id:mjson.id,
-      seenby:message.user_id,
-      seenat:'seen'
-    }),
-    headers: { 'Content-Type': 'application/json' },
-}).then(res => res.json())
-.then(json => console.log(json));
+//   fetch(local_endpoint+'/createChatGroupMsgStatus'
+//   , {
+//     method: 'post',
+//     body:    JSON.stringify({
+//       msg_id:mjson.id,
+//       seenby:message.user_id,
+//       seenat:'seen'
+//     }),
+//     headers: { 'Content-Type': 'application/json' },
+// }).then(res => res.json())
+// .then(json => console.log(json));
 
 console.log("end test seen user id")
 
@@ -232,15 +232,10 @@ console.log("end test seen user id")
   
     for (let i in json){
 
-      if (json[i].member === message.user_id) {
+      // if (json[i].member === message.user_id) {
 
-
-
-       
-
-
-        continue;
-      }
+      //   continue;
+      // }
 
 
       fetch(auth_endpoint+'/sendIosNotification?id='+json[i].member
