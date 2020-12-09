@@ -200,6 +200,19 @@ client.on('createMessage', (message) => {
   console.log(mjson.id)
   console.log("end test group id")
 
+  fetch(local_endpoint+'/createChatGroupMsgStatus'
+  , {
+    method: 'post',
+    body:    JSON.stringify({
+      msg_id:mjson.id,
+      seenby:message.user_id,
+      seenat:'seen'
+    }),
+    headers: { 'Content-Type': 'application/json' },
+})
+
+console.log("end test seen user id")
+
   fetch(local_endpoint+'/updateGroupLastChannel?group_id='+message.room+'&sender='+message.user_id+'&message='+message.text+'&time='+moment().valueOf()+'&type='+message.type+'&message_id='+mjson.id
   , {
     method: 'put',
@@ -213,16 +226,7 @@ client.on('createMessage', (message) => {
 .then(res => res.json())
 .then(json => {
 
-  fetch(local_endpoint+'/createChatGroupMsgStatus'
-  , {
-    method: 'post',
-    body:    JSON.stringify({
-      msg_id:mjson.id,
-      seenby:message.user_id,
-      seenat:'seen'
-    }),
-    headers: { 'Content-Type': 'application/json' },
-})
+
 .then(res => res.json())
 .then(json => console.log(json));
   
