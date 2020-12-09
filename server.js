@@ -232,10 +232,25 @@ console.log("end test seen user id")
   
     for (let i in json){
 
-      // if (json[i].member === message.user_id) {
+      if (json[i].member === message.user_id) {
 
-      //   continue;
-      // }
+       // continue;
+
+       fetch(local_endpoint+'/createChatGroupMsgStatus'
+       , {
+         method: 'post',
+         body:    JSON.stringify({
+           msg_id:mjson.id,
+           seenby:json[i].member,
+           seenat:1607472749308
+         }),
+         headers: { 'Content-Type': 'application/json' },
+     })
+     .then(res => res.json())
+     .then(json => console.log(json));
+ 
+
+      }
 
 
       fetch(auth_endpoint+'/sendIosNotification?id='+json[i].member
