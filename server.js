@@ -242,7 +242,8 @@ console.log("end test seen user id")
          body:    JSON.stringify({
            msg_id:mjson.id,
            seenby:json[i].member,
-           seenat:1607472749308
+           seenat:moment().valueOf(),
+           status:'seen'
          }),
          headers: { 'Content-Type': 'application/json' },
      })
@@ -270,7 +271,8 @@ console.log("end test seen user id")
         body:    JSON.stringify({
           msg_id:mjson.id,
           seenby:json[i].member,
-          seenat:null
+          seenat:null,
+          status:'unseen'
         }),
         headers: { 'Content-Type': 'application/json' },
     })
