@@ -377,7 +377,7 @@ console.log("end test seen user id")
     
     // console.log(json)
   
-    fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type
+    fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type+'&message_id='+json.id
     , {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
