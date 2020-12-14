@@ -251,7 +251,7 @@ console.log("end test seen user id")
      .then(json => console.log(json));
  
 
-      }
+      }else{
 
 
       fetch(auth_endpoint+'/sendIosNotification?id='+json[i].member
@@ -279,7 +279,7 @@ console.log("end test seen user id")
     .then(res => res.json())
     .then(json => console.log(json));
 
-
+  }
   }
 
 
