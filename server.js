@@ -377,11 +377,19 @@ console.log("end test seen user id")
     
     // console.log(json)
 
-    console.log(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type+'&message_id='+json.id)
+    // console.log(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type+'&message_id='+json.id)
   
-    fetch(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type+'&message_id='+json.id
+    fetch(local_endpoint+'/updatePrivateLastChannel'
     , {
       method: 'put',
+      body:    JSON.stringify({
+        sender:e.from,
+        receipt:e.to,
+        message:e.message.message,
+        time:e.message.time,
+        type:e.message.type,
+        message_id:json.id
+      }),
       headers: { 'Content-Type': 'application/json' },
   })
   .then(res => res.json())
