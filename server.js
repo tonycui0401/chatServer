@@ -214,13 +214,22 @@ client.on('createMessage', (message) => {
 
 console.log("end test seen user id")
 
-  fetch(local_endpoint+'/updateGroupLastChannel?group_id='+message.room+'&sender='+message.user_id+'&message='+message.text+'&time='+moment().valueOf()+'&type='+message.type+'&message_id='+mjson.id
+  fetch(local_endpoint+'/updateGroupLastChannel'
   , {
     method: 'put',
+    body:    JSON.stringify({
+      group_id:message.room,
+      sender:message.user_id,
+      message:message.text,
+      time:moment().valueOf(),
+      type:message.type,
+      message_id:mjson.id
+    }),
     headers: { 'Content-Type': 'application/json' },
 })
 .then(res => res.json())
 .then(json => console.log(json));
+
 
 
   fetch(local_endpoint+'/allChatGroupMembers?room='+message.room)
