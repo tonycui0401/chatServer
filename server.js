@@ -366,7 +366,7 @@ io.on("connection", function (client) {
       .then(res => res.json())
       .then(json => console.log(json));
 
-
+    console.log('check notification')
 
     fetch(local_endpoint + '/createPrivateChat'
       , {
@@ -383,8 +383,10 @@ io.on("connection", function (client) {
       .then(res => res.json())
       .then(json => {
 
-
+        console.log('check create chat')
         console.log(json)
+        console.log('end check create chat')
+
 
         // console.log(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type+'&message_id='+json.id)
 
