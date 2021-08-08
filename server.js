@@ -4,7 +4,7 @@ const port = 8002;
 var server = require("http").Server(app);
 const io = require("socket.io")(server);
 const redisAdapter = require('socket.io-redis');
-io.adapter(redisAdapter({ host: '54.194.150.138', port: 6379 }));
+io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 // const users = require("./configs/users");
 const cors = require("cors");
 const moment = require('moment');
