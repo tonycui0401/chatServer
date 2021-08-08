@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@socket.io/redis-adapter": "^7.0.0",
     "aws-sdk": "^2.742.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -23,6 +24,7 @@
     "passport": "^0.4.1",
     "pg": "^8.3.2",
     "pg-hstore": "^2.3.3",
+    "redis": "^3.1.2",
     "sequelize": "^6.3.4",
     "socket.io": "^2.1.1",
     "socket.io-redis": "^6.1.1"
