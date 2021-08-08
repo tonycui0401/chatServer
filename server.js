@@ -11,7 +11,7 @@ const redisAdapter = require('@socket.io/redis-adapter');
 
 const pubClient = createClient({ host: '54.194.150.138', port: 6379 });
 const subClient = pubClient.duplicate();
-io.adapter(redisAdapter(pubClient, subClient));
+// io.adapter(redisAdapter(pubClient, subClient));
 // const users = require("./configs/users");
 const cors = require("cors");
 const moment = require('moment');
