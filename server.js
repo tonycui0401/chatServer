@@ -3,9 +3,11 @@ const app = express();
 const port = 8002;
 var server = require("http").Server(app);
 const io = require("socket.io")(server);
+var redis = require('socket.io-redis');
+io.adapter(redis({ host: '54.194.150.138', port: 6379 }));
 // const redisAdapter = require('socket.io-redis');
 // io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
-const { createClient } = require('redis');
+// const { createClient } = require('redis');
 
 // const redisAdapter = require('@socket.io/redis-adapter');
 
