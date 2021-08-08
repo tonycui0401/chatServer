@@ -7,10 +7,10 @@ const io = require("socket.io")(server);
 // io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 const { createClient } = require('redis');
 
-const redisAdapter = require('@socket.io/redis-adapter');
+// const redisAdapter = require('@socket.io/redis-adapter');
 
-const pubClient = createClient({ host: '54.194.150.138', port: 6379 });
-const subClient = pubClient.duplicate();
+// const pubClient = createClient({ host: '54.194.150.138', port: 6379 });
+// const subClient = pubClient.duplicate();
 // io.adapter(redisAdapter(pubClient, subClient));
 // const users = require("./configs/users");
 const cors = require("cors");
