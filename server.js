@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 8002;
-var server = require('http').Server(app);
-const io = require('socket.io')(server);
+var server = require("http").Server(app);
+const io = require("socket.io")(server);
 // var redis = require('socket.io-redis');
 // io.adapter(redis({ host: '54.194.150.138', port: 6379 }));
 // const redisAdapter = require('socket.io-redis');
@@ -15,8 +15,8 @@ const io = require('socket.io')(server);
 // const subClient = pubClient.duplicate();
 // io.adapter(redisAdapter(pubClient, subClient));
 // const users = require("./configs/users");
-const cors = require('cors');
-const moment = require('moment');
+const cors = require("cors");
+const moment = require("moment");
 
 const {
   local_endpoint,
@@ -25,9 +25,9 @@ const {
   local_base,
   firebaseCloud,
   firebaseKey,
-} = require('./configs/config');
+} = require("./configs/config");
 
-const fetch = require('node-fetch');
+const fetch = require("node-fetch");
 
 app.use(cors());
 
@@ -54,15 +54,15 @@ var generateUserMessage = (from, room, location, type, text) => {
   };
 };
 
-io.on('connection', function (client) {
-  client.on('sign-in', e => {
+io.on("connection", function (client) {
+  client.on("sign-in", (e) => {
     let user_id = e.user_id;
 
-    io.emit('online', { user_id: user_id });
+    io.emit("online", { user_id: user_id });
 
     if (!user_id) return;
     client.user_id = user_id;
-    console.log('client user id');
+    console.log("client user id");
     console.log(client.user_id);
     if (clients[user_id]) {
       clients[user_id].push(client);
@@ -70,15 +70,21 @@ io.on('connection', function (client) {
       clients[user_id] = [client];
     }
 
-    fetch(local_endpoint + '/updateUserChatStatus?id=' + client.user_id + '&chatstatus=online', {
-      method: 'put',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(res => res.json())
-      .then(json => console.log(json));
+    fetch(
+      local_endpoint +
+        "/updateUserChatStatus?id=" +
+        client.user_id +
+        "&chatstatus=online",
+      {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => console.log(json));
   });
 
-  client.on('join', params => {
+  client.on("join", (params) => {
     client.join(params.room_id);
 
     users[params.room_id] = {};
@@ -92,23 +98,23 @@ io.on('connection', function (client) {
       member[params.room_id].users = [];
     }
 
-    fetch(local_endpoint + '/allChatGroupMembers?room=' + params.room_id)
-      .then(res => res.json())
-      .then(json => {
-        console.log('check members');
+    fetch(local_endpoint + "/allChatGroupMembers?room=" + params.room_id)
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("check members");
         console.log(json);
 
         users[params.room_id].users = json;
-        console.log('print me out');
+        console.log("print me out");
         for (let i in json) {
-          console.log('print me');
+          console.log("print me");
           console.log(json[i]);
           member[params.room_id].users.push(json[i].member);
         }
 
         console.log(member[params.room_id].users.includes(params.user_id));
 
-        console.log('end check members');
+        console.log("end check members");
 
         //   if(!member[params.room_id].users.includes(params.user_id)){
 
@@ -138,22 +144,33 @@ io.on('connection', function (client) {
 
         //   }
 
-        client.emit('newMessage', generateMessage(params.user_id, params.room_id));
+        client.emit(
+          "newMessage",
+          generateMessage(params.user_id, params.room_id)
+        );
 
-        client.broadcast.to(params.room_id).emit('newMessage', generateMessage(params.user_id, params.room_id));
+        client.broadcast
+          .to(params.room_id)
+          .emit("newMessage", generateMessage(params.user_id, params.room_id));
       });
 
     console.log(member[params.room_id].users.includes(params.user_id));
   });
 
-  client.on('createMessage', message => {
-    console.log('on create new messages');
+  client.on("createMessage", (message) => {
+    console.log("on create new messages");
     console.log(message);
-    let tempObj = generateUserMessage(message.user_id, message.room, 'in', message.type, message.text);
-    io.to(message.room).emit('newGroupMessage', tempObj);
+    let tempObj = generateUserMessage(
+      message.user_id,
+      message.room,
+      "in",
+      message.type,
+      message.text
+    );
+    io.to(message.room).emit("newGroupMessage", tempObj);
 
-    fetch(local_endpoint + '/createChatGroupMsg', {
-      method: 'post',
+    fetch(local_endpoint + "/createChatGroupMsg", {
+      method: "post",
       body: JSON.stringify({
         room: message.room,
         sender: message.user_id,
@@ -161,13 +178,13 @@ io.on('connection', function (client) {
         time: moment().valueOf(),
         type: message.type,
       }),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     })
-      .then(res => res.json())
-      .then(mjson => {
-        console.log('test group id');
+      .then((res) => res.json())
+      .then((mjson) => {
+        console.log("test group id");
         console.log(mjson.id);
-        console.log('end test group id');
+        console.log("end test group id");
 
         //   fetch(local_endpoint+'/createChatGroupMsgStatus'
         //   , {
@@ -181,10 +198,10 @@ io.on('connection', function (client) {
         // }).then(res => res.json())
         // .then(json => console.log(json));
 
-        console.log('end test seen user id');
+        console.log("end test seen user id");
 
-        fetch(local_endpoint + '/updateGroupLastChannel', {
-          method: 'put',
+        fetch(local_endpoint + "/updateGroupLastChannel", {
+          method: "put",
           body: JSON.stringify({
             group_id: message.room,
             sender: message.user_id,
@@ -193,42 +210,45 @@ io.on('connection', function (client) {
             type: message.type,
             message_id: mjson.id,
           }),
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         })
-          .then(res => res.json())
-          .then(json => console.log(json));
+          .then((res) => res.json())
+          .then((json) => console.log(json));
 
-        fetch(local_endpoint + '/allChatGroupMembers?room=' + message.room)
-          .then(res => res.json())
-          .then(json => {
+        fetch(local_endpoint + "/allChatGroupMembers?room=" + message.room)
+          .then((res) => res.json())
+          .then((json) => {
             for (let i in json) {
               if (json[i].member === message.user_id) {
                 // continue;
 
-                fetch(local_endpoint + '/createChatGroupMsgStatus', {
-                  method: 'post',
+                fetch(local_endpoint + "/createChatGroupMsgStatus", {
+                  method: "post",
                   body: JSON.stringify({
                     msg_id: mjson.id,
                     seenby: json[i].member,
                     seenat: moment().valueOf(),
-                    status: 'seen',
+                    status: "seen",
                   }),
-                  headers: { 'Content-Type': 'application/json' },
+                  headers: { "Content-Type": "application/json" },
                 })
-                  .then(res => res.json())
-                  .then(json => console.log(json));
+                  .then((res) => res.json())
+                  .then((json) => console.log(json));
               } else {
                 // get user token
-                fetch(auth_endpoint + '/getBrowserToken?user_id=' + json[i].member, {
-                  method: 'get',
-                  headers: { 'Content-Type': 'application/json' },
-                })
-                  .then(res => res.json())
-                  .then(json => {
+                fetch(
+                  auth_endpoint + "/getBrowserToken?user_id=" + json[i].member,
+                  {
+                    method: "get",
+                    headers: { "Content-Type": "application/json" },
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((json) => {
                     if (!json?.length) {
                       return;
                     }
-                    console.log('onmessage');
+                    console.log("onmessage");
                     console.log(json);
                     console.log(json[0].token);
                     console.log(message.text);
@@ -236,89 +256,92 @@ io.on('connection', function (client) {
 
                     // firebase
                     fetch(firebaseCloud, {
-                      method: 'post',
+                      method: "post",
                       body: JSON.stringify({
                         data: {
-                          title: 'ReEcho: New Message',
+                          title: "ReEcho: New Message",
                           body: message.text,
-                          url: 'https://reecho-frontend.s3-website-eu-west-1.amazonaws.com/dashboard',
+                          url: "https://api.reecho.com/dashboard",
                         },
                         to: json[0].token,
                       }),
                       headers: {
                         authorization: firebaseKey,
-                        'content-type': 'application/json',
+                        "content-type": "application/json",
                       },
                     })
-                      .then(res => {
-                        console.log('google', res);
+                      .then((res) => {
+                        console.log("google", res);
                       })
-                      .catch(e => console.log);
+                      .catch((e) => console.log);
                   })
-                  .catch(e => console.log);
+                  .catch((e) => console.log);
 
-                fetch(auth_endpoint + '/sendIosNotification?id=' + json[i].member, {
-                  method: 'get',
-                  headers: { 'Content-Type': 'application/json' },
-                })
-                  .then(res => res.json())
-                  .then(json => console.log(json));
+                fetch(
+                  auth_endpoint + "/sendIosNotification?id=" + json[i].member,
+                  {
+                    method: "get",
+                    headers: { "Content-Type": "application/json" },
+                  }
+                )
+                  .then((res) => res.json())
+                  .then((json) => console.log(json));
 
-                fetch(local_endpoint + '/createChatGroupMsgStatus', {
-                  method: 'post',
+                fetch(local_endpoint + "/createChatGroupMsgStatus", {
+                  method: "post",
                   body: JSON.stringify({
                     msg_id: mjson.id,
                     seenby: json[i].member,
                     seenat: null,
-                    status: 'unseen',
+                    status: "unseen",
                   }),
-                  headers: { 'Content-Type': 'application/json' },
+                  headers: { "Content-Type": "application/json" },
                 })
-                  .then(res => res.json())
-                  .then(json => console.log(json));
+                  .then((res) => res.json())
+                  .then((json) => console.log(json));
               }
             }
           });
       });
 
-    console.log('get client id');
+    console.log("get client id");
   });
 
-  client.on('message', e => {
+  client.on("message", (e) => {
     let targetId = e.to;
     let sourceId = client.user_id;
     // io.emit("message", e)
-    console.log('message data');
+    console.log("message data");
     console.log(targetId);
     console.log(clients[targetId]);
     console.log(sourceId);
     if (targetId && clients[targetId]) {
-      clients[targetId].forEach(cli => {
-        cli.emit('message', e);
+      clients[targetId].forEach((cli) => {
+        cli.emit("message", e);
 
-        console.log('emited this');
+        console.log("emited this");
       });
     }
 
     if (sourceId && clients[sourceId]) {
-      clients[sourceId].forEach(cli => {
-        cli.emit('message', e);
+      clients[sourceId].forEach((cli) => {
+        cli.emit("message", e);
 
-        console.log('emited that');
+        console.log("emited that");
       });
     }
 
-    fetch(auth_endpoint + '/sendIosNotification?id=' + e.to, {
-      method: 'get',
-      headers: { 'Content-Type': 'application/json' },
+    fetch(auth_endpoint + "/sendIosNotification?id=" + e.to, {
+      method: "get",
+      headers: { "Content-Type": "application/json" },
     })
-      .then(res => res.json())
-      .then(json => console.log(json));
+      .then((res) => res.json())
+      .then((json) => console.log(json));
 
-    console.log('check notification');
+    console.log("check notification");
 
-    fetch(local_endpoint + '/createPrivateChat', {
-      method: 'post',
+    fetch(local_endpoint + "/createPrivateChat", {
+      method: "post",
       body: JSON.stringify({
         sender: e.from,
         receipt: e.to,
@@ -326,18 +349,18 @@ io.on('connection', function (client) {
         time: e.message.time,
         type: e.message.type,
       }),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     })
-      .then(res => res.json())
-      .then(json => {
-        console.log('check create chat');
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("check create chat");
         console.log(json);
-        console.log('end check create chat');
+        console.log("end check create chat");
 
         // console.log(local_endpoint+'/updatePrivateLastChannel?sender='+e.from+'&receipt='+e.to+'&message='+e.message.message+'&time='+e.message.time+'&type='+e.message.type+'&message_id='+json.id)
 
-        fetch(local_endpoint + '/updatePrivateLastChannel', {
-          method: 'put',
+        fetch(local_endpoint + "/updatePrivateLastChannel", {
+          method: "put",
           body: JSON.stringify({
             sender: e.from,
             receipt: e.to,
@@ -346,20 +369,20 @@ io.on('connection', function (client) {
             type: e.message.type,
             message_id: json.id,
           }),
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         })
-          .then(res => res.json())
-          .then(json => console.log(json));
+          .then((res) => res.json())
+          .then((json) => console.log(json));
       });
 
     // get user token
-    fetch(auth_endpoint + '/getBrowserToken?user_id=' + e.to, {
-      method: 'get',
-      headers: { 'Content-Type': 'application/json' },
+    fetch(auth_endpoint + "/getBrowserToken?user_id=" + e.to, {
+      method: "get",
+      headers: { "Content-Type": "application/json" },
     })
-      .then(res => res.json())
-      .then(json => {
-        console.log('onmessage');
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("onmessage");
         console.log(json);
         console.log(json[0].token);
         console.log(e.message.message);
@@ -367,39 +390,45 @@ io.on('connection', function (client) {
 
         // firebase
         fetch(firebaseCloud, {
-          method: 'post',
+          method: "post",
           body: JSON.stringify({
             data: {
-              title: 'ReEcho: New Message',
+              title: "ReEcho: New Message",
               body: e.message.message,
-              url: 'https://reecho-frontend.s3-website-eu-west-1.amazonaws.com/dashboard',
+              url: "https://api.reecho.com/dashboard",
             },
             to: json[0].token,
           }),
           headers: {
             authorization: firebaseKey,
-            'content-type': 'application/json',
+            "content-type": "application/json",
           },
         })
-          .then(res => {
-            console.log('google', res);
+          .then((res) => {
+            console.log("google", res);
           })
-          .catch(e => console.log);
+          .catch((e) => console.log);
       })
-      .catch(e => console.log);
+      .catch((e) => console.log);
   });
 
-  client.on('disconnect', id => {
+  client.on("disconnect", (id) => {
     let targetId = 78;
     let sourceId = 77;
-    io.emit('offline', { user_id: client.user_id });
+    io.emit("offline", { user_id: client.user_id });
 
-    fetch(local_endpoint + '/updateUserChatStatus?id=' + client.user_id + '&chatstatus=offline', {
-      method: 'put',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(res => res.json())
-      .then(json => console.log(json));
+    fetch(
+      local_endpoint +
+        "/updateUserChatStatus?id=" +
+        client.user_id +
+        "&chatstatus=offline",
+      {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => console.log(json));
 
     if (!client.user_id || !clients[client.user_id]) {
       return;
@@ -413,32 +442,44 @@ io.on('connection', function (client) {
   });
 });
 
-app.get('/users', (req, res) => {
-  fetch('http://localhost:5000/api/tags/locationTags')
-    .then(res => res.json())
-    .then(json => {
+app.get("/users", (req, res) => {
+  fetch("http://localhost:5000/api/tags/locationTags")
+    .then((res) => res.json())
+    .then((json) => {
       console.log(json);
 
       res.send(json);
     });
 });
 
-app.get('/sign_s3_chat_group_image', (req, res) => {
+app.get("/sign_s3_chat_group_image", (req, res) => {
   const fileurl = req.query.fileurl;
   const fileext = req.query.fileext;
   const user_id = req.query.user_id;
   const room_id = req.query.room_id;
 
-  io.emit('new group image message', { url: fileurl, user_id: user_id, room_id: room_id, fileext: fileext });
+  io.emit("new group image message", {
+    url: fileurl,
+    user_id: user_id,
+    room_id: room_id,
+    fileext: fileext,
+  });
 });
 
-app.get('/sign_s3_chat_image', (req, res) => {
+app.get("/sign_s3_chat_image", (req, res) => {
   const fileurl = req.query.fileurl;
   const fileext = req.query.fileext;
   const user_id = req.query.user_id;
   const from_id = req.query.from_id;
 
-  io.emit('new image message', { url: fileurl, user_id: user_id, from_id: from_id, fileext: fileext });
+  io.emit("new image message", {
+    url: fileurl,
+    user_id: user_id,
+    from_id: from_id,
+    fileext: fileext,
+  });
 });
 
-server.listen(port, () => console.log(`Example app listening on port ${port}!`));
+server.listen(port, () =>
+  console.log(`Example app listening on port ${port}!`)
+);
