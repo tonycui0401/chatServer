@@ -245,7 +245,7 @@ io.on("connection", function (client) {
                 )
                   .then((res) => res.json())
                   .then((json) => {
-                    if (!json?.length) {
+                    if (!json.length) {
                       return;
                     }
                     console.log("onmessage");
